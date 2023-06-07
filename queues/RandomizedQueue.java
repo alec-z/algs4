@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] q = (Item[]) new Object[8];
     private int capacity = 8;
-    private int size = 0;
     private int top = 0;
 
     // construct an empty randomized queue
@@ -14,37 +13,24 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void resize() {
         int newCapacity = capacity * 2;
         Item[] newQ = (Item[]) new Object[newCapacity];
-        int newTop = 0;
         for (int i = 0; i < top; i++) {
             if (q[i] != null) {
-                newQ[newTop++] = q[i];
+                newQ[i] = q[i];
             }
         }
-        q = newQ;
-        top = newTop;
         capacity = newCapacity;
     }
 
-    private void compress() {
-        int blanks = 0;
-        for (int i = 0; i < top; i++) {
-            if (q[i] == null) {
-                blanks++;
-            } else {
-                q[i - blanks] = q[i];
-            }
-        }
-        top -= blanks;
-    }
+    
 
     // is the randomized queue empty?
     public boolean isEmpty() {
-        return size == 0;
+        return top == 0;
     }
 
     // return the number of items on the randomized queue
     public int size() {
-        return size;
+        return top;
     }
 
     // add the item
@@ -52,14 +38,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (item == null) {
             throw new IllegalArgumentException();
         }
-        size++;
-        while (top > 0 && q[top - 1] == null) { 
-            top--; 
-        }
-        if (top == capacity) {
-            resize();
-        }
         q[top++] = item;
+        int pos = StdRandom.uniformInt(top);
+        // swap 
+        Item tmp;
+        tmp = q[top - 1];
+        q[top - 1] = q[pos];
+        q[pos] = tmp;
     }
 
     // remove and return a random item
@@ -67,21 +52,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        size--;
-        
-        int pos = StdRandom.uniformInt(top);
-        int adds = pos % 2 == 0 ? 1 : top - 1;
-        
-        while (q[pos] == null) {
-            pos = (pos + adds) % top;
-        }
-        Item item = q[pos];
-        q[pos] = null;
-        if (size <= top / 2) {
-            compress();
-        }
-
-        return item;
+        return q[--top];
     }
 
     // return a random item (but do not remove it)
@@ -90,10 +61,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException();
         }
         int pos = StdRandom.uniformInt(top);
-        int adds = pos % 2 == 0 ? 1 : top - 1;
-        while (q[pos] == null) {
-            pos = (pos + adds) % top;
-        }
         return q[pos];
     }
 
@@ -129,6 +96,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
 
         //exceptions
+        System.out.println();
         try {
             deque.enqueue(null);
         } catch (IllegalArgumentException e) {
@@ -176,7 +144,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         @Override
         public boolean hasNext() {
-            findNextP();
             return currentP < top;
         }
 
@@ -192,12 +159,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public void remove() {
             throw new UnsupportedOperationException();
-        }
-
-        private void findNextP() {
-            while (currentP < top && q[orders[currentP]] == null) {
-                currentP++;
-            }
         }
     }
 }

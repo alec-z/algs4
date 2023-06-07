@@ -10,6 +10,9 @@ public class Permutation {
             try {
                 String str = StdIn.readString();
                 randomQue.enqueue(str);
+                if (randomQue.size() > k) {
+                    randomQue.dequeue();
+                }
             } catch (NoSuchElementException e) {
                 break;
             }
