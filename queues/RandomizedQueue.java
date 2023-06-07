@@ -38,6 +38,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (item == null) {
             throw new IllegalArgumentException();
         }
+        if (top == capacity) {
+            resize();
+        }
         q[top++] = item;
         int pos = StdRandom.uniformInt(top);
         // swap 
