@@ -10,8 +10,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // construct an empty randomized queue
     public RandomizedQueue() {}
 
-    private void resize() {
-        int newCapacity = capacity * 2;
+    private void resize(int newCapacity) {
         Item[] newQ = (Item[]) new Object[newCapacity];
         for (int i = 0; i < top; i++) {
             if (q[i] != null) {
@@ -40,7 +39,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new IllegalArgumentException();
         }
         if (top == capacity) {
-            resize();
+            resize(capacity * 2);
         }
         q[top++] = item;
         int pos = StdRandom.uniformInt(top);
@@ -55,6 +54,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException();
+        }
+        if (top <= capacity / 4) {
+            resize(capacity / 4);
         }
         return q[--top];
     }
