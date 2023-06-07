@@ -18,6 +18,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 newQ[i] = q[i];
             }
         }
+        q = newQ;
         capacity = newCapacity;
     }
 
