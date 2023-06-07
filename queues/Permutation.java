@@ -9,9 +9,7 @@ public class Permutation {
         while (!StdIn.isEmpty()) {
             String str = StdIn.readString();
             randomQue.enqueue(str);
-            if (randomQue.size() > k) {
-                randomQue.dequeue();
-            }
+            
         }
         for (int i = 0; i < k; i++) {
             System.out.println(randomQue.dequeue());
