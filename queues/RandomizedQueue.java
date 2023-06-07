@@ -18,6 +18,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             }
         }
         q = newQ;
+        
         capacity = newCapacity;
     }
 
@@ -58,7 +59,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (top <= capacity / 4) {
             resize(capacity / 4);
         }
-        return q[--top];
+        Item item = q[--top];
+        q[top] = null;
+        return item;
     }
 
     // return a random item (but do not remove it)
